@@ -1,0 +1,138 @@
+/* RMD Outline View Styles */
+
+.rmd-outline-toolbar {
+    display: flex;
+    align-items: center;
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--background-modifier-border);
+    gap: 6px;
+}
+
+.rmd-outline-search {
+    flex: 1;
+    padding: 3px 6px;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 3px;
+    background: var(--background-primary);
+    color: var(--text-normal);
+    font-size: 0.85em;
+}
+
+.rmd-outline-collapse-btn {
+    padding: 3px 6px;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 3px;
+    background: var(--background-secondary);
+    color: var(--text-normal);
+    cursor: pointer;
+    font-size: 0.75em;
+}
+
+.rmd-outline-content {
+    padding: 8px 12px;
+    overflow-y: auto;
+}
+
+.rmd-outline-item-wrapper {
+    margin-left: 0px !important;
+    margin-bottom: 1px;
+    position: relative;
+    z-index: 1;
+}
+
+.rmd-outline-item-wrapper.first-child,
+.rmd-outline-item-wrapper.middle-child,
+.rmd-outline-item-wrapper.last-child {
+    margin-bottom: 1px;
+}
+
+.rmd-outline-item-wrapper.level-2 {
+    margin-top: 1px;
+}
+
+.rmd-outline-item-wrapper.level-3 {
+    margin-top: 1px;
+}
+
+.rmd-outline-item-wrapper.level-4 {
+    margin-top: 2px;
+}
+
+.rmd-outline-item {
+    margin-left: 0 !important;
+}
+
+.rmd-outline-item-self {
+    display: flex;
+    align-items: center;
+    padding: 2px 8px;
+    font-size: 14px;
+    min-height: 20px;
+    line-height: 1.1;
+    transition: background-color 0.15s ease;
+    position: relative;
+    border: 1px solid #d8d8d8;
+    border-left: 3px solid #d8d8d8;
+    border-radius: 4px;
+    background-color: var(--background-primary);
+}
+
+.rmd-outline-item-self.active {
+    background-color: var(--background-modifier-active-hover);
+    font-weight: 500;
+    color: var(--text-accent);
+}
+
+.rmd-outline-item-self:not(.active):hover {
+    background-color: var(--background-modifier-hover);
+    transform: translateX(2px);
+}
+
+.rmd-outline-collapse-icon {
+    position: absolute;
+    left: 32px;
+    margin-right: 6px;
+    cursor: pointer;
+    width: 14px;
+    height: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #000000;
+    font-size: 12px;
+    font-weight: 900;
+    z-index: 10;
+}
+
+.rmd-outline-collapse-icon.collapsed {
+    transform: rotate(0deg);
+}
+
+.rmd-outline-collapse-icon.expanded {
+    transform: rotate(90deg);
+}
+
+.rmd-outline-collapse-icon:hover {
+    background-color: var(--background-modifier-hover);
+    color: var(--text-normal);
+}
+
+.rmd-outline-collapse-placeholder {
+    position: absolute;
+    left: 32px;
+    margin-right: 6px;
+    width: 14px;
+    height: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.rmd-outline-title {
+    flex: 1;
+    cursor: pointer;
+    margin-left: 0px;
+}

@@ -276,7 +276,7 @@ class RMDOutlineView extends ItemView {
 		this.currentHeaders = headers;
 		
 		headers.forEach((header, index) => {
-			const hasChildren = this.hasAnyChildren(header, headers, index);
+			const hasChildren = index < headers.length - 1 && headers[index + 1].level > header.level;
 			const isCollapsed = this.collapsedStates[`${header.level}-${header.line}`];
 			const isActive = this.activeHeaderLine === header.line;
 			
@@ -327,20 +327,6 @@ class RMDOutlineView extends ItemView {
 		for (let i = index - 1; i >= 0; i--) {
 			if (headers[i].level === header.level - 1) return true;
 			if (headers[i].level < header.level - 1) break;
-		}
-		return false;
-	}
-
-	hasAnyChildren(header, headers, index) {
-		// 检查后面是否有任何级别更深的标题
-		for (let i = index + 1; i < headers.length; i++) {
-			const nextHeader = headers[i];
-			if (nextHeader.level > header.level) {
-				return true; // 有下级标题
-			}
-			if (nextHeader.level <= header.level) {
-				break; // 遇到同级或上级标题，停止查找
-			}
 		}
 		return false;
 	}
@@ -489,7 +475,7 @@ class RMDOutlineView extends ItemView {
 		if (this.isAllCollapsed) {
 			// 全部折叠：折叠所有有子标题的标题
 			headers.forEach((header, index) => {
-				const hasChildren = this.hasAnyChildren(header, headers, index);
+				const hasChildren = index < headers.length - 1 && headers[index + 1].level > header.level;
 				if (hasChildren) {
 					this.collapsedStates[`${header.level}-${header.line}`] = true;
 				}
