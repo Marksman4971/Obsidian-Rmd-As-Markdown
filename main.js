@@ -415,18 +415,16 @@ class RMDOutlineView extends ItemView {
 	}
 
 	shouldHideHeader(header, headers, currentIndex) {
-		// 只检查直接父标题是否折叠
+		// 检查所有上级标题是否有折叠的
 		for (let i = currentIndex - 1; i >= 0; i--) {
 			const prevHeader = headers[i];
-			// 找到直接父标题
-			if (prevHeader.level === header.level - 1) {
+			// 如果找到级别更小（更高级）的标题，检查是否折叠
+			if (prevHeader.level < header.level) {
 				const key = `${prevHeader.level}-${prevHeader.line}`;
-				// 如果直接父标题折叠，则隐藏
-				return this.collapsedStates && this.collapsedStates[key];
-			}
-			// 如果遇到更高级的标题，停止查找
-			if (prevHeader.level < header.level - 1) {
-				break;
+				// 如果任何上级标题折叠，则隐藏当前标题
+				if (this.collapsedStates && this.collapsedStates[key]) {
+					return true;
+				}
 			}
 		}
 		return false;
