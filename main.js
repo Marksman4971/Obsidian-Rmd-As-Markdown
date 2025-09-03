@@ -228,32 +228,27 @@ class RMDOutlineView extends ItemView {
 
 			// 顶部工具栏
 			const toolbar = container.createEl('div', {
-				attr: { 
-					style: 'display: flex; align-items: center; padding: 6px 8px; border-bottom: 1px solid var(--background-modifier-border); gap: 6px;'
-				}
+				cls: 'rmd-outline-toolbar'
 			});
 
 			// 搜索框
 			const searchInput = toolbar.createEl('input', {
+				cls: 'rmd-outline-search',
 				attr: {
 					type: 'text',
-					placeholder: '搜索标题...',
-					style: 'flex: 1; padding: 3px 6px; border: 1px solid var(--background-modifier-border); border-radius: 3px; background: var(--background-primary); color: var(--text-normal); font-size: 0.85em;'
+					placeholder: '搜索标题...'
 				}
 			});
 
 			// 全部折叠/展开按钮
 			const collapseAllBtn = toolbar.createEl('button', {
 				text: this.isAllCollapsed ? '展开' : '折叠',
-				attr: {
-					style: 'padding: 3px 6px; border: 1px solid var(--background-modifier-border); border-radius: 3px; background: var(--background-secondary); color: var(--text-normal); cursor: pointer; font-size: 0.75em;'
-				}
+				cls: 'rmd-outline-collapse-btn'
 			});
 
 			// 内容区域
 			const list = container.createEl('div', { 
-				cls: 'nav-files-container',
-				attr: { style: 'padding: 8px 12px; overflow-y: auto;' }
+				cls: 'nav-files-container rmd-outline-content'
 			});
 			
 			// 搜索功能
@@ -341,46 +336,27 @@ class RMDOutlineView extends ItemView {
 		const baseIndent = (header.level - 1) * 12;
 		const indentPx = baseIndent;
 		
-		// 所有标题都有完整边框，根据是否为子标题调整间距
-		const borderStyle = 'border: 1px solid #d8d8d8; border-left: 3px solid #d8d8d8;';
-		const borderRadius = 'border-radius: 4px;';
-		let marginBottom = 'margin-bottom: 1px;';
+		const wrapperClasses = ['rmd-outline-item-wrapper'];
+		if (isFirstChild) wrapperClasses.push('first-child');
+		if (isMiddleChild) wrapperClasses.push('middle-child');
+		if (isLastChild) wrapperClasses.push('last-child');
+		if (header.level >= 2) wrapperClasses.push(`level-${header.level}`);
 		
-		if (isFirstChild || isMiddleChild || isLastChild) {
-			// 子标题：根据层级设置微小差异的间距
-			const topMargin = header.level === 2 ? 1 : header.level === 3 ? 1 : 2; // 更小差异：1px, 1px, 2px
-			marginBottom = `margin-bottom: 1px; margin-top: ${topMargin}px;`;
-		}
 		const wrapper = container.createEl('div', {
-			cls: 'outline-item-wrapper',
-			attr: { 
-				style: `margin-left: 0px !important; ${marginBottom} position: relative; z-index: 1;` 
-			}
+			cls: wrapperClasses.join(' ')
 		});
 
 		const item = wrapper.createEl('div', {
-			cls: 'tree-item nav-file',
-			attr: { style: 'margin-left: 0 !important;' }
+			cls: 'tree-item nav-file rmd-outline-item'
 		});
 
+		const itemSelfClasses = ['tree-item-self', 'is-clickable', 'rmd-outline-item-self'];
+		if (isActive) itemSelfClasses.push('active');
+		
 		const itemSelf = item.createEl('div', {
-			cls: 'tree-item-self is-clickable',
+			cls: itemSelfClasses.join(' '),
 			attr: {
-				style: `
-					display: flex; 
-					align-items: center; 
-					padding: 2px 8px;
-					padding-left: ${8 + indentPx}px;
-					font-size: 14px; 
-					min-height: 20px; 
-					line-height: 1.1;
-					transition: background-color 0.15s ease;
-					position: relative;
-					${borderStyle}
-					${borderRadius}
-					background-color: var(--background-primary);
-					${isActive ? 'background-color: var(--background-modifier-active-hover); font-weight: 500; color: var(--text-accent);' : ''}
-				`
+				style: `padding-left: ${8 + indentPx}px;`
 			}
 		});
 
@@ -392,39 +368,18 @@ class RMDOutlineView extends ItemView {
 
 	addCollapseIcon(itemSelf, hasChildren, isCollapsed, header) {
 		if (hasChildren) {
+			const collapseIconClasses = ['tree-item-icon', 'collapse-icon', 'rmd-outline-collapse-icon'];
+			if (isCollapsed) {
+				collapseIconClasses.push('collapsed');
+			} else {
+				collapseIconClasses.push('expanded');
+			}
+			
 			const collapseIcon = itemSelf.createEl('span', {
-				cls: 'tree-item-icon collapse-icon',
-				attr: { 
-					style: `
-						margin-left: 4px;
-						margin-right: 6px; 
-						cursor: pointer; 
-						width: 14px; 
-						height: 14px;
-						display: inline-flex;
-						align-items: center;
-						justify-content: center;
-						border-radius: 3px;
-						transform: ${isCollapsed ? 'rotate(0deg)' : 'rotate(90deg)'}; 
-						transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-						color: #000000;
-						font-size: 12px;
-						font-weight: 900;
-						position: static;
-					`
-				}
+				cls: collapseIconClasses.join(' ')
 			});
 			collapseIcon.innerHTML = '▷';
 			
-			// 悬停效果
-			collapseIcon.addEventListener('mouseenter', () => {
-				collapseIcon.style.backgroundColor = 'var(--background-modifier-hover)';
-				collapseIcon.style.color = 'var(--text-normal)';
-			});
-			collapseIcon.addEventListener('mouseleave', () => {
-				collapseIcon.style.backgroundColor = '';
-				collapseIcon.style.color = 'var(--text-muted)';
-			});
 			
 			collapseIcon.addEventListener('click', (e) => {
 				e.stopPropagation();
@@ -435,28 +390,15 @@ class RMDOutlineView extends ItemView {
 		} else {
 			// 为没有子标题的标题添加等宽占位符
 			const placeholder = itemSelf.createEl('span', {
-				attr: { 
-					style: `
-						margin-left: 4px;
-						margin-right: 6px; 
-						width: 14px; 
-						height: 14px;
-						display: inline-flex;
-						align-items: center;
-						justify-content: center;
-					`
-				}
+				cls: 'rmd-outline-collapse-placeholder'
 			});
 		}
 	}
 
 	addHeaderText(itemSelf, header) {
 		const link = itemSelf.createEl('div', {
-			cls: 'nav-file-title',
-			text: header.text,
-			attr: { 
-				style: `flex: 1; cursor: pointer; margin-left: 0px;`
-			}
+			cls: 'nav-file-title rmd-outline-title',
+			text: header.text
 		});
 
 		link.addEventListener('click', (e) => {
@@ -469,16 +411,7 @@ class RMDOutlineView extends ItemView {
 	}
 
 	addHoverEffects(itemSelf, isActive) {
-		if (!isActive) {
-			itemSelf.addEventListener('mouseenter', () => {
-				itemSelf.style.backgroundColor = 'var(--background-modifier-hover)';
-				itemSelf.style.transform = 'translateX(2px)';
-			});
-			itemSelf.addEventListener('mouseleave', () => {
-				itemSelf.style.backgroundColor = '';
-				itemSelf.style.transform = '';
-			});
-		}
+		// 悬停效果现在通过CSS处理
 	}
 
 	shouldHideHeader(header, headers, currentIndex) {
