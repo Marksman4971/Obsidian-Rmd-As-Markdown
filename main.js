@@ -445,13 +445,29 @@ class RMDOutlineView extends ItemView {
 	}
 
 	jumpToHeader(header) {
+		// 获取当前大纲视图对应的文件
+		const currentFile = this.app.workspace.getActiveFile();
+		if (!currentFile || !this.plugin.isRmdFile(currentFile)) {
+			return;
+		}
+		
+		// 查找显示当前文件的编辑器视图
 		const leaves = this.app.workspace.getLeavesOfType('markdown');
 		let targetLeaf = null;
 		
 		for (const leaf of leaves) {
-			if (leaf.view && leaf.view.file && this.plugin.isRmdFile(leaf.view.file)) {
+			if (leaf.view && leaf.view.file && leaf.view.file.path === currentFile.path) {
 				targetLeaf = leaf;
 				break;
+			}
+		}
+		
+		// 如果没找到对应的视图，检查当前活跃的叶子
+		if (!targetLeaf) {
+			const activeLeaf = this.app.workspace.activeLeaf;
+			if (activeLeaf && activeLeaf.view && activeLeaf.view.file && 
+				activeLeaf.view.file.path === currentFile.path) {
+				targetLeaf = activeLeaf;
 			}
 		}
 		
