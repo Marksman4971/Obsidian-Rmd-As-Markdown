@@ -136,3 +136,12 @@
     cursor: pointer;
     margin-left: 0px;
 }
+
+/* Header Structure Modal Styles */
+.rmd-header-structure-display {
+    white-space: pre-wrap;
+    font-family: monospace;
+    background-color: var(--background-secondary);
+    padding: 10px;
+    border-radius: 5px;
+}

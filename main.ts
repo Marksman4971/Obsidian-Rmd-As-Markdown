@@ -165,12 +165,7 @@ class HeaderStructureModal extends Modal {
 		const { contentEl } = this;
 		contentEl.createEl('h2', { text: 'RMD标题结构' });
 		
-		const pre = contentEl.createEl('pre');
-		pre.style.whiteSpace = 'pre-wrap';
-		pre.style.fontFamily = 'monospace';
-		pre.style.backgroundColor = 'var(--background-secondary)';
-		pre.style.padding = '10px';
-		pre.style.borderRadius = '5px';
+		const pre = contentEl.createEl('pre', { cls: 'rmd-header-structure-display' });
 		pre.textContent = this.content;
 	}
 
